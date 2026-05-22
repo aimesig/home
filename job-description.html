@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aimesig™ — Founding Engineer · Full Stack Multiplatform Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --c1:#00D4FF;
+  --c2:#7C3AED;
+  --c3:#F43F8F;
+  --c4:#00FFA3;
+  --c5:#FF6B35;
+  --bg:#050818;
+  --bg2:#080D22;
+  --card:#0D1530;
+  --card2:#111A3A;
+  --border:rgba(124,58,237,0.25);
+  --border2:rgba(0,212,255,0.2);
+  --text:#F0F4FF;
+  --text2:#8B9BC8;
+  --text3:#4A5580;
+  --gm:linear-gradient(135deg,#00D4FF 0%,#7C3AED 50%,#F43F8F 100%);
+  --gm2:linear-gradient(135deg,#00FFA3 0%,#00D4FF 50%,#7C3AED 100%);
+  --font:'Poppins',sans-serif;
+  --fontb:'Inter',sans-serif;
+  --fonts:'Space Grotesk',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--c2),var(--c3));border-radius:2px}
+.gt{background:var(--gm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gt2{background:var(--gm2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* BUTTONS */
+.btn-pri{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gm);color:#fff;border:none;border-radius:100px;
+  padding:14px 32px;font-family:var(--font);font-size:15px;font-weight:600;
+  cursor:pointer;text-decoration:none;position:relative;overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+}
+.btn-pri:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,.5)}
+.btn-sec{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(124,58,237,.08);color:var(--text);
+  border:1px solid rgba(124,58,237,.4);border-radius:100px;
+  padding:13px 30px;font-family:var(--font);font-size:15px;font-weight:500;
+  cursor:pointer;text-decoration:none;
+  transition:transform .25s,background .25s,border-color .25s,box-shadow .25s;
+  backdrop-filter:blur(8px);
+}
+.btn-sec:hover{transform:translateY(-3px);background:rgba(124,58,237,.18);border-color:var(--c2);box-shadow:0 8px 30px rgba(124,58,237,.25)}
+
+/* LAYOUT */
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+.sec-tag{font-family:var(--fonts);font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--c1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-tag::before{content:'';width:20px;height:2px;background:var(--c1);border-radius:1px}
+.sec-h{font-size:44px;font-weight:800;line-height:1.15;margin-bottom:18px;letter-spacing:-1px}
+
+/* NOISE OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:18px 0;
+  background:rgba(5,8,24,0.75);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;padding:0 28px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{
+  height:36px;width:auto;
+  display:block;
+  object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(124,58,237,.4));
+}
+.logo-text{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
+.logo-text span{font-size:10px;vertical-align:super;color:var(--text3);font-weight:400}
+.nav-badge{
+  font-family:var(--fonts);font-size:11px;font-weight:600;
+  background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);
+  color:var(--c1);padding:5px 14px;border-radius:100px;letter-spacing:1px;
+}
+.nav-cta{display:flex;align-items:center;gap:12px}
+.nav-cta a{
+  font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;
+  transition:color .2s;
+}
+.nav-cta a:hover{color:var(--text)}
+.nav-apply{
+  font-size:13px;font-weight:600;
+  background:var(--gm);color:#fff;
+  border:none;border-radius:100px;padding:8px 22px;
+  cursor:pointer;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+}
+.nav-apply:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.4)}
+
+/* HERO */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:100px;padding-bottom:60px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 60% 40%, rgba(124,58,237,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 10% 80%, rgba(0,212,255,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 90% 10%, rgba(244,63,143,.07) 0%, transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(124,58,237,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,.06) 1px, transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+}
+.hero-content{position:relative;z-index:2;display:grid;grid-template-columns:1fr 420px;gap:60px;align-items:center;width:100%}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.h-badge{
+  font-family:var(--fonts);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 14px;border-radius:100px;
+  border:1px solid;
+}
+.h-badge.b1{color:var(--c1);border-color:rgba(0,212,255,.3);background:rgba(0,212,255,.06)}
+.h-badge.b2{color:var(--c4);border-color:rgba(0,255,163,.3);background:rgba(0,255,163,.06)}
+.h-badge.b3{color:var(--c3);border-color:rgba(244,63,143,.3);background:rgba(244,63,143,.06)}
+.hero-eyebrow{font-family:var(--fonts);font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--c1);margin-bottom:16px}
+.hero-title{font-size:58px;font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:20px}
+.hero-title .line2{color:var(--text2);font-weight:300;font-size:42px;letter-spacing:-1px;display:block;margin-top:4px}
+.hero-sub{font-family:var(--fontb);font-size:17px;color:var(--text2);line-height:1.75;margin-bottom:32px;max-width:480px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap}
+.stat-item{display:flex;flex-direction:column}
+.stat-num{font-size:24px;font-weight:800;background:var(--gm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-family:var(--fontb);font-size:12px;color:var(--text3);margin-top:2px}
+
+/* HERO CARD */
+.hero-card{
+  background:rgba(13,21,48,0.85);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:32px;
+  backdrop-filter:blur(20px);
+  position:relative;
+  overflow:hidden;
+}
+.hero-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gm);
+}
+.hc-title{font-size:13px;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;font-family:var(--fonts)}
+.hc-role{font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px}
+.hc-comp{font-size:14px;color:var(--c1);font-weight:500;margin-bottom:24px}
+.hc-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:14px;color:var(--text2);font-family:var(--fontb)}
+.hc-icon{width:32px;height:32px;border-radius:8px;background:rgba(124,58,237,.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.hc-divider{height:1px;background:var(--border);margin:20px 0}
+.hc-stack{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.stack-chip{
+  font-family:var(--fonts);font-size:11px;font-weight:600;
+  background:rgba(0,212,255,.06);color:var(--c1);
+  border:1px solid rgba(0,212,255,.2);
+  padding:4px 12px;border-radius:100px;letter-spacing:.5px;
+}
+.stack-chip.purple{background:rgba(124,58,237,.08);color:#A78BFA;border-color:rgba(124,58,237,.3)}
+.stack-chip.pink{background:rgba(244,63,143,.06);color:#F87FB0;border-color:rgba(244,63,143,.25)}
+.stack-chip.green{background:rgba(0,255,163,.06);color:#34D399;border-color:rgba(0,255,163,.25)}
+.hc-apply{width:100%;padding:13px;background:var(--gm);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.hc-apply:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(124,58,237,.4)}
+
+/* SECTION */
+section{padding:90px 0;position:relative}
+section+section{border-top:1px solid rgba(124,58,237,.1)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.about-text p{font-family:var(--fontb);font-size:16px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+.vision-cards{display:flex;flex-direction:column;gap:14px}
+.vc{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:20px 22px;display:flex;align-items:center;gap:16px;
+  transition:border-color .2s,transform .2s;
+}
+.vc:hover{border-color:rgba(124,58,237,.5);transform:translateX(4px)}
+.vc-icon{font-size:22px;width:44px;height:44px;border-radius:10px;background:rgba(124,58,237,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vc-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.vc-desc{font-family:var(--fontb);font-size:12px;color:var(--text3)}
+
+/* RESPONSIBILITIES */
+.resp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.resp-card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:28px;position:relative;overflow:hidden;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.resp-card:hover{transform:translateY(-6px);border-color:rgba(124,58,237,.5);box-shadow:0 20px 60px rgba(124,58,237,.12)}
+.resp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  opacity:0;transition:opacity .25s;
+}
+.resp-card:hover::before{opacity:1}
+.rc1::before{background:linear-gradient(90deg,var(--c1),var(--c2))}
+.rc2::before{background:linear-gradient(90deg,var(--c2),var(--c3))}
+.rc3::before{background:linear-gradient(90deg,var(--c4),var(--c1))}
+.rc4::before{background:linear-gradient(90deg,var(--c5),var(--c3))}
+.rc5::before{background:linear-gradient(90deg,var(--c1),var(--c4))}
+.rc6::before{background:linear-gradient(90deg,var(--c3),var(--c2))}
+.resp-icon{font-size:28px;margin-bottom:16px}
+.resp-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px}
+.resp-list{list-style:none;font-family:var(--fontb);font-size:13px;color:var(--text2);line-height:1.6}
+.resp-list li{padding:4px 0;display:flex;align-items:flex-start;gap:8px}
+.resp-list li::before{content:'›';color:var(--c1);font-size:16px;line-height:1;flex-shrink:0;margin-top:1px}
+
+/* SKILLS */
+.skills-wrap{margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.skill-block{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;
+}
+.skill-block-title{font-size:13px;font-weight:600;color:var(--text3);letter-spacing:2px;text-transform:uppercase;font-family:var(--fonts);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.skill-block-title span{width:6px;height:6px;border-radius:50%;background:var(--c1)}
+.skill-tags{display:flex;flex-wrap:wrap;gap:10px}
+.skill-tag{
+  font-family:var(--fonts);font-size:12px;font-weight:500;
+  padding:7px 16px;border-radius:100px;
+  background:var(--card2);border:1px solid var(--border);
+  color:var(--text2);
+  transition:all .2s;cursor:default;
+}
+.skill-tag:hover{background:rgba(124,58,237,.12);border-color:var(--c2);color:var(--text)}
+.skill-tag.core{
+  background:rgba(0,212,255,.06);color:var(--c1);border-color:rgba(0,212,255,.25);
+  font-weight:600;
+}
+.skill-tag.pref{
+  background:rgba(124,58,237,.08);color:#A78BFA;border-color:rgba(124,58,237,.3);
+}
+
+/* PROJECTS */
+.projects-list{margin-top:48px;display:flex;flex-direction:column;gap:16px}
+.proj-item{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:22px 28px;
+  display:flex;align-items:center;gap:20px;
+  transition:border-color .2s,background .2s,transform .2s;
+  position:relative;overflow:hidden;
+}
+.proj-item:hover{border-color:rgba(124,58,237,.45);background:var(--card2);transform:translateX(6px)}
+.proj-num{
+  font-size:36px;font-weight:900;color:transparent;
+  -webkit-text-stroke:1px rgba(124,58,237,.25);
+  font-family:var(--fonts);flex-shrink:0;width:50px;line-height:1;
+}
+.proj-info{flex:1}
+.proj-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.proj-desc{font-family:var(--fontb);font-size:13px;color:var(--text3)}
+.proj-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.proj-tag{font-size:11px;font-family:var(--fonts);color:var(--c1);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);padding:3px 10px;border-radius:100px}
+.proj-tag.pt2{color:#A78BFA;background:rgba(124,58,237,.06);border-color:rgba(124,58,237,.2)}
+.proj-tag.pt3{color:#34D399;background:rgba(0,255,163,.06);border-color:rgba(0,255,163,.2)}
+.proj-arrow{color:var(--text3);font-size:20px;flex-shrink:0;transition:transform .2s,color .2s}
+.proj-item:hover .proj-arrow{transform:translateX(4px);color:var(--c1)}
+
+/* OPPORTUNITY */
+.opp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:48px}
+.opp-card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;
+  text-align:center;
+  transition:transform .2s,border-color .2s;
+}
+.opp-card:hover{transform:translateY(-5px);border-color:rgba(124,58,237,.4)}
+.opp-icon{font-size:36px;margin-bottom:14px;display:block}
+.opp-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
+.opp-text{font-family:var(--fontb);font-size:13px;color:var(--text3);line-height:1.65}
+
+/* EMPLOYMENT */
+.emp-chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.emp-chip{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:14px 22px;font-size:14px;font-weight:500;color:var(--text);
+  transition:border-color .2s,background .2s;
+}
+.emp-chip:hover{border-color:rgba(124,58,237,.4);background:var(--card2)}
+.emp-dot{width:8px;height:8px;border-radius:50%;background:var(--gm);flex-shrink:0}
+
+/* APPLY */
+.apply-section{
+  background:linear-gradient(135deg,rgba(13,21,48,1) 0%,rgba(17,26,58,1) 100%);
+  border:1px solid var(--border);border-radius:32px;
+  padding:64px;
+  text-align:center;
+  position:relative;overflow:hidden;
+  margin-top:80px;margin-bottom:80px;
+}
+.apply-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 0%, rgba(124,58,237,.12) 0%, transparent 70%);
+}
+.apply-title{font-size:40px;font-weight:800;letter-spacing:-1px;margin-bottom:14px;position:relative;z-index:1}
+.apply-sub{font-family:var(--fontb);font-size:16px;color:var(--text2);margin-bottom:36px;position:relative;z-index:1}
+.apply-list{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:40px;position:relative;z-index:1;
+}
+.apply-item{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(13,21,48,.8);border:1px solid var(--border);border-radius:10px;
+  padding:10px 18px;font-family:var(--fontb);font-size:13px;color:var(--text2);
+}
+.apply-item-dot{width:6px;height:6px;border-radius:50%;background:var(--c4);flex-shrink:0}
+.apply-actions{display:flex;justify-content:center;gap:14px;position:relative;z-index:1}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 0;
+  text-align:center;
+}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-size:16px;font-weight:700;color:var(--text2)}
+.footer-copy{font-family:var(--fontb);font-size:12px;color:var(--text3)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-family:var(--fontb);font-size:12px;color:var(--text3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--c1)}
+
+/* FLOATING ORBS */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px);animation:floatOrb 8s ease-in-out infinite}
+.orb1{width:400px;height:400px;background:rgba(124,58,237,.08);top:-100px;right:-100px;animation-delay:0s}
+.orb2{width:300px;height:300px;background:rgba(0,212,255,.06);bottom:20%;left:-100px;animation-delay:3s}
+.orb3{width:250px;height:250px;background:rgba(244,63,143,.06);bottom:-50px;right:20%;animation-delay:5s}
+@keyframes floatOrb{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+/* PULSE BADGE */
+.pulse-wrap{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,163,.06);border:1px solid rgba(0,255,163,.2);border-radius:100px;padding:6px 16px 6px 10px;margin-bottom:20px}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--c4);position:relative}
+.pulse-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(0,255,163,.3);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.5);opacity:0}}
+.pulse-text{font-family:var(--fonts);font-size:11px;font-weight:600;color:var(--c4);letter-spacing:1.5px;text-transform:uppercase}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);animation:fadeUp .7s ease forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.fade-up:nth-child(1){animation-delay:.1s}
+.fade-up:nth-child(2){animation-delay:.2s}
+.fade-up:nth-child(3){animation-delay:.3s}
+.fade-up:nth-child(4){animation-delay:.4s}
+.fade-up:nth-child(5){animation-delay:.5s}
+.fade-up:nth-child(6){animation-delay:.6s}
+
+/* SECTION DIVIDER */
+.s-div{height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.3),rgba(0,212,255,.3),transparent);margin:0}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-content{grid-template-columns:1fr}
+  .hero-card{display:none}
+  .hero-title{font-size:40px}
+  .resp-grid{grid-template-columns:1fr 1fr}
+  .skills-wrap{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+  .opp-grid{grid-template-columns:1fr 1fr}
+  .apply-section{padding:40px 24px}
+  .apply-title{font-size:28px}
+}
+@media(max-width:600px){
+  .resp-grid{grid-template-columns:1fr}
+  .opp-grid{grid-template-columns:1fr}
+  .sec-h{font-size:30px}
+  .nav-badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <img src="logo_s.png" alt="Aimesig" class="logo-mark">
+      <span class="logo-text">Aimesig<span>™</span></span>
+    </a>
+    <div class="nav-badge">Founding Engineer Role</div>
+    <div class="nav-cta">
+      <a href="#responsibilities">Responsibilities</a>
+      <a href="#skills">Skills</a>
+      <a href="#apply" class="nav-apply">Apply Now →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="wrap" style="width:100%">
+    <div class="hero-content">
+      <!-- LEFT -->
+      <div>
+        <div class="pulse-wrap fade-up">
+          <div class="pulse-dot"></div>
+          <span class="pulse-text">Now Hiring</span>
+        </div>
+        <div class="hero-badges fade-up">
+          <span class="h-badge b1">Flutter</span>
+          <span class="h-badge b2">Node.js</span>
+          <span class="h-badge b1">MongoDB</span>
+          <span class="h-badge b3">Socket.IO</span>
+          <span class="h-badge b2">Full Stack</span>
+        </div>
+        <h1 class="hero-title fade-up">
+          <span class="gt">Full Stack</span><br>
+          <span class="gt">Multiplatform</span>
+          <span class="line2">Developer</span>
+        </h1>
+        <p class="hero-sub fade-up">
+          A founding engineering role with high ownership. You'll design, build, and scale an entire software ecosystem — chat, HRMS, ERP, dashboards, and AI-integrated systems.
+        </p>
+        <div class="hero-actions fade-up">
+          <a href="#apply" class="btn-pri">Apply Now <span>→</span></a>
+          <a href="#about" class="btn-sec">Learn More</a>
+        </div>
+        <div class="hero-stats fade-up">
+          <div class="stat-item">
+            <span class="stat-num">7+</span>
+            <span class="stat-label">Products to Build</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Remote Friendly</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">∞</span>
+            <span class="stat-label">Growth Potential</span>
+          </div>
+        </div>
+      </div>
+      <!-- CARD -->
+      <div class="hero-card fade-up">
+        <div class="hc-title">Position Overview</div>
+        <div class="hc-role">Founding Engineer</div>
+        <div class="hc-comp">Aimesig™ · AI • Apps • IoT • Cloud</div>
+        <div class="hc-row">
+          <div class="hc-icon">🌍</div>
+          <span>Remote — Flexible Location</span>
+        </div>
+        <div class="hc-row">
+          <div class="hc-icon">⚡</div>
+          <span>Full-time / Contract / Freelance</span>
+        </div>
+        <div class="hc-row">
+          <div class="hc-icon">🚀</div>
+          <span>Early-stage · High Ownership</span>
+        </div>
+        <div class="hc-row">
+          <div class="hc-icon">🏗️</div>
+          <span>Architecture to Production</span>
+        </div>
+        <div class="hc-divider"></div>
+        <div style="font-size:12px;color:var(--text3);font-family:var(--fonts);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Core Stack</div>
+        <div class="hc-stack">
+          <span class="stack-chip">Flutter</span>
+          <span class="stack-chip">Dart</span>
+          <span class="stack-chip purple">Node.js</span>
+          <span class="stack-chip purple">Express.js</span>
+          <span class="stack-chip pink">MongoDB</span>
+          <span class="stack-chip green">Socket.IO</span>
+          <span class="stack-chip">REST API</span>
+          <span class="stack-chip purple">JWT</span>
+        </div>
+        <button class="hc-apply" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Apply for This Role →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-tag">About the Company</div>
+    <h2 class="sec-h reveal">Building the Next<br><span class="gt">Unified Software Ecosystem</span></h2>
+    <div class="about-grid" style="margin-top:40px">
+      <div class="about-text reveal">
+        <p>We are building a unified multiplatform software ecosystem — one shared backend, one shared authentication system, and one reusable frontend architecture powering multiple enterprise-grade products.</p>
+        <p>Think Zoho meets Slack meets Microsoft Teams, built from the ground up with modern technology. This is not a feature request — it is a platform vision.</p>
+        <p>The selected developer will become a core founding technical member as the ecosystem expands into ERP platforms, AI systems, communication infrastructure, and enterprise automation.</p>
+      </div>
+      <div class="vision-cards reveal">
+        <div class="vc">
+          <div class="vc-icon">💬</div>
+          <div>
+            <div class="vc-name">Slack / Microsoft Teams</div>
+            <div class="vc-desc">Realtime communication infrastructure</div>
+          </div>
+        </div>
+        <div class="vc">
+          <div class="vc-icon">🏢</div>
+          <div>
+            <div class="vc-name">Zoho / Odoo</div>
+            <div class="vc-desc">ERP and business management platform</div>
+          </div>
+        </div>
+        <div class="vc">
+          <div class="vc-icon">📊</div>
+          <div>
+            <div class="vc-name">HRMS Platform</div>
+            <div class="vc-desc">Human resource management system</div>
+          </div>
+        </div>
+        <div class="vc">
+          <div class="vc-icon">🤖</div>
+          <div>
+            <div class="vc-name">AI Integration</div>
+            <div class="vc-desc">AI-powered features across all products</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- RESPONSIBILITIES -->
+<section id="responsibilities">
+  <div class="wrap">
+    <div class="sec-tag">What You'll Do</div>
+    <h2 class="sec-h reveal">Core <span class="gt">Responsibilities</span></h2>
+    <p style="font-family:var(--fontb);font-size:16px;color:var(--text2);max-width:520px" class="reveal">You will own the full product lifecycle — from architecture to deployment — across all applications in the ecosystem.</p>
+    <div class="resp-grid">
+      <div class="resp-card rc1 reveal">
+        <div class="resp-icon">📱</div>
+        <div class="resp-title">Frontend Development</div>
+        <ul class="resp-list">
+          <li>Multiplatform apps with Flutter</li>
+          <li>Android, Web & Desktop targets</li>
+          <li>Reusable UI component library</li>
+          <li>State management systems</li>
+          <li>Realtime UI updates</li>
+        </ul>
+      </div>
+      <div class="resp-card rc2 reveal">
+        <div class="resp-icon">⚙️</div>
+        <div class="resp-title">Backend Development</div>
+        <ul class="resp-list">
+          <li>Scalable REST APIs with Node.js</li>
+          <li>Authentication & role-based access</li>
+          <li>Business logic implementation</li>
+          <li>Socket.IO integration</li>
+          <li>Database integration</li>
+        </ul>
+      </div>
+      <div class="resp-card rc3 reveal">
+        <div class="resp-icon">⚡</div>
+        <div class="resp-title">Realtime Systems</div>
+        <ul class="resp-list">
+          <li>Realtime chat features</li>
+          <li>Online/offline presence tracking</li>
+          <li>Push notifications system</li>
+          <li>Live dashboard updates</li>
+          <li>WebSocket architecture</li>
+        </ul>
+      </div>
+      <div class="resp-card rc4 reveal">
+        <div class="resp-icon">🗄️</div>
+        <div class="resp-title">Database Management</div>
+        <ul class="resp-list">
+          <li>MongoDB schema design</li>
+          <li>Query optimization</li>
+          <li>Data security architecture</li>
+          <li>Scalable data structures</li>
+          <li>Indexing strategies</li>
+        </ul>
+      </div>
+      <div class="resp-card rc5 reveal">
+        <div class="resp-icon">🚀</div>
+        <div class="resp-title">Deployment & DevOps</div>
+        <ul class="resp-list">
+          <li>Frontend & backend hosting</li>
+          <li>SSL configuration & security</li>
+          <li>CI/CD pipeline setup</li>
+          <li>Monitoring & logging</li>
+          <li>Cloudflare & Render</li>
+        </ul>
+      </div>
+      <div class="resp-card rc6 reveal">
+        <div class="resp-icon">🏛️</div>
+        <div class="resp-title">Architecture</div>
+        <ul class="resp-list">
+          <li>Shared backend design</li>
+          <li>Unified auth system</li>
+          <li>Reusable component library</li>
+          <li>Clean modular codebase</li>
+          <li>Production optimization</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-tag">Requirements</div>
+    <h2 class="sec-h reveal">Skills &amp; <span class="gt">Expertise</span></h2>
+    <div class="skills-wrap">
+      <div class="skill-block reveal">
+        <div class="skill-block-title"><span></span>Strong Knowledge Required</div>
+        <div class="skill-tags">
+          <span class="skill-tag core">Flutter</span>
+          <span class="skill-tag core">Dart</span>
+          <span class="skill-tag core">Node.js</span>
+          <span class="skill-tag core">Express.js</span>
+          <span class="skill-tag core">MongoDB</span>
+          <span class="skill-tag core">REST APIs</span>
+          <span class="skill-tag core">Socket.IO</span>
+          <span class="skill-tag core">Git / GitHub</span>
+        </div>
+      </div>
+      <div class="skill-block reveal">
+        <div class="skill-block-title"><span style="background:var(--c2)"></span>Good Understanding Of</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Authentication Systems</span>
+          <span class="skill-tag">JWT</span>
+          <span class="skill-tag">Realtime Architectures</span>
+          <span class="skill-tag">Responsive UI/UX</span>
+          <span class="skill-tag">Deployment Workflows</span>
+          <span class="skill-tag">Cloud Hosting</span>
+          <span class="skill-tag">Security Best Practices</span>
+        </div>
+      </div>
+      <div class="skill-block reveal" style="grid-column:1/-1">
+        <div class="skill-block-title"><span style="background:var(--c3)"></span>Preferred / Bonus Skills</div>
+        <div class="skill-tags">
+          <span class="skill-tag pref">ERP Systems</span>
+          <span class="skill-tag pref">HRMS Platforms</span>
+          <span class="skill-tag pref">Chat Applications</span>
+          <span class="skill-tag pref">Dashboard Systems</span>
+          <span class="skill-tag pref">Cloudflare</span>
+          <span class="skill-tag pref">Docker</span>
+          <span class="skill-tag pref">WebRTC</span>
+          <span class="skill-tag pref">AI Integrations</span>
+          <span class="skill-tag pref">Open-source Contributions</span>
+          <span class="skill-tag pref">Production Deployments</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-tag">Project Scope</div>
+    <h2 class="sec-h reveal">What You'll <span class="gt">Build</span></h2>
+    <p style="font-family:var(--fontb);font-size:16px;color:var(--text2);max-width:520px;margin-bottom:8px" class="reveal">Seven initial products — all yours to architect and ship.</p>
+    <div class="projects-list">
+      <div class="proj-item reveal">
+        <div class="proj-num">01</div>
+        <div class="proj-info">
+          <div class="proj-name">Authentication System</div>
+          <div class="proj-desc">Unified auth with JWT, role-based access, and shared session management across the entire ecosystem</div>
+          <div class="proj-tags">
+            <span class="proj-tag">JWT</span><span class="proj-tag pt2">OAuth</span><span class="proj-tag pt3">RBAC</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+      <div class="proj-item reveal">
+        <div class="proj-num">02</div>
+        <div class="proj-info">
+          <div class="proj-name">Realtime Chat Platform</div>
+          <div class="proj-desc">Slack-like messaging with presence tracking, notifications, channels and direct messaging via Socket.IO</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Socket.IO</span><span class="proj-tag pt2">Flutter</span><span class="proj-tag pt3">WebSockets</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+      <div class="proj-item reveal">
+        <div class="proj-num">03</div>
+        <div class="proj-info">
+          <div class="proj-name">HRMS System</div>
+          <div class="proj-desc">Employee management, payroll, attendance tracking, leave management and HR workflows</div>
+          <div class="proj-tags">
+            <span class="proj-tag pt2">Node.js</span><span class="proj-tag">MongoDB</span><span class="proj-tag pt3">Flutter</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+      <div class="proj-item reveal">
+        <div class="proj-num">04</div>
+        <div class="proj-info">
+          <div class="proj-name">Admin Dashboard</div>
+          <div class="proj-desc">Centralized control panel with live analytics, user management, and system monitoring</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Realtime</span><span class="proj-tag pt2">Analytics</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+      <div class="proj-item reveal">
+        <div class="proj-num">05</div>
+        <div class="proj-info">
+          <div class="proj-name">Business Website Platform</div>
+          <div class="proj-desc">A builder for business and shop sites with product listings, SEO, and customer-facing pages</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Flutter Web</span><span class="proj-tag pt3">CMS</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+      <div class="proj-item reveal">
+        <div class="proj-num">06</div>
+        <div class="proj-info">
+          <div class="proj-name">ERP Modules</div>
+          <div class="proj-desc">Inventory, finance, procurement, and operations modules for enterprise business automation</div>
+          <div class="proj-tags">
+            <span class="proj-tag pt2">ERP</span><span class="proj-tag">Node.js</span><span class="proj-tag pt3">MongoDB</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+      <div class="proj-item reveal">
+        <div class="proj-num">07</div>
+        <div class="proj-info">
+          <div class="proj-name">Device Monitoring Dashboards</div>
+          <div class="proj-desc">IoT device tracking with live metrics, alerts, and remote configuration via realtime infrastructure</div>
+          <div class="proj-tags">
+            <span class="proj-tag">IoT</span><span class="proj-tag pt2">Realtime</span><span class="proj-tag pt3">Flutter</span>
+          </div>
+        </div>
+        <div class="proj-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- OPPORTUNITY -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag">Why Join</div>
+    <h2 class="sec-h reveal">The <span class="gt">Opportunity</span></h2>
+    <div class="opp-grid">
+      <div class="opp-card reveal">
+        <span class="opp-icon">🧱</span>
+        <div class="opp-title">Founding Member</div>
+        <div class="opp-text">You're not joining a team — you're building it. Shape the architecture, culture, and product direction from day one.</div>
+      </div>
+      <div class="opp-card reveal">
+        <span class="opp-icon">📈</span>
+        <div class="opp-title">Long-Term Growth</div>
+        <div class="opp-text">As the ecosystem expands into AI, ERP, and enterprise platforms, your role evolves with it. High ceiling, zero glass.</div>
+      </div>
+      <div class="opp-card reveal">
+        <span class="opp-icon">🌐</span>
+        <div class="opp-title">Full Ownership</div>
+        <div class="opp-text">Frontend, backend, infrastructure, architecture — all yours. A rare opportunity to build something at full scale.</div>
+      </div>
+      <div class="opp-card reveal">
+        <span class="opp-icon">⚡</span>
+        <div class="opp-title">Fast Execution</div>
+        <div class="opp-text">Startup pace with a clear product vision. No bureaucracy. Ship, iterate, improve — in real time.</div>
+      </div>
+      <div class="opp-card reveal">
+        <span class="opp-icon">🎯</span>
+        <div class="opp-title">Real Impact</div>
+        <div class="opp-text">Every line of code you write runs in production, serving real users across multiple products simultaneously.</div>
+      </div>
+      <div class="opp-card reveal">
+        <span class="opp-icon">🤝</span>
+        <div class="opp-title">Flexible Terms</div>
+        <div class="opp-text">Full-time, contract, or freelance — open to discussion. Remote-first environment with asynchronous culture.</div>
+      </div>
+    </div>
+
+    <!-- Employment types -->
+    <div style="margin-top:52px" class="reveal">
+      <div class="sec-tag">Employment Type</div>
+      <div class="emp-chips">
+        <div class="emp-chip"><div class="emp-dot"></div>Full-time</div>
+        <div class="emp-chip"><div class="emp-dot"></div>Contract</div>
+        <div class="emp-chip"><div class="emp-dot"></div>Freelance</div>
+        <div class="emp-chip"><div class="emp-dot"></div>Remote</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- APPLY -->
+<section id="apply" style="padding:60px 0">
+  <div class="wrap">
+    <div class="apply-section reveal">
+      <div class="pulse-wrap" style="display:inline-flex;margin-bottom:20px">
+        <div class="pulse-dot"></div>
+        <span class="pulse-text">Open Position</span>
+      </div>
+      <div class="apply-title">Ready to <span class="gt">Build Something</span><br>Extraordinary?</div>
+      <p class="apply-sub">Share your work. Join the founding team. Shape the future of the ecosystem.</p>
+      <div class="apply-list">
+        <div class="apply-item"><div class="apply-item-dot"></div>Resume / CV</div>
+        <div class="apply-item"><div class="apply-item-dot"></div>GitHub Profile</div>
+        <div class="apply-item"><div class="apply-item-dot"></div>Portfolio / Projects</div>
+        <div class="apply-item"><div class="apply-item-dot"></div>Multiplatform Apps</div>
+        <div class="apply-item"><div class="apply-item-dot"></div>Relevant Experience</div>
+        <div class="apply-item"><div class="apply-item-dot"></div>Availability</div>
+        <div class="apply-item"><div class="apply-item-dot"></div>Expected Compensation</div>
+      </div>
+      <div class="apply-actions">
+        <a href="mailto:aimesig.dev@gmail.com?subject=Application%20%E2%80%94%20Full%20Stack%20Multiplatform%20Developer&body=Hi%20Aimesig%20Team%2C%0A%0AI%20am%20applying%20for%20the%20Full%20Stack%20Multiplatform%20Developer%20(Founding%20Engineer)%20role.%0A%0APlease%20find%20my%20details%20below%3A%0A%0A%F0%9F%93%84%20Resume%2FCV%3A%20%5Battach%5D%0A%F0%9F%90%99%20GitHub%3A%20%5Byour%20github%5D%0A%F0%9F%8C%90%20Portfolio%3A%20%5Byour%20portfolio%5D%0A%F0%9F%93%B1%20Multiplatform%20Apps%3A%20%5Blinks%5D%0A%F0%9F%93%85%20Availability%3A%20%5Bdate%5D%0A%F0%9F%92%B0%20Expected%20Compensation%3A%20%5Bamount%5D%0A%0ARelevant%20Experience%3A%0A%5Bdescribe%20briefly%5D%0A%0ALooking%20forward%20to%20connecting!%0A%0ABest%20regards%2C%0A%5BYour%20Name%5D" class="btn-pri">Send Application →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-logo">Aimesig<span style="font-size:10px;vertical-align:super;color:var(--text3)">™</span></div>
+      <div class="footer-copy">© 2025 Aimesig. AI · Apps · IoT · Embedded Systems · Cloud</div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
+  })
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Nav scroll effect
+window.addEventListener('scroll',()=>{
+  const nav = document.querySelector('nav');
+  if(window.scrollY > 60){
+    nav.style.background='rgba(5,8,24,0.95)';
+    nav.style.padding='12px 0';
+  } else {
+    nav.style.background='rgba(5,8,24,0.75)';
+    nav.style.padding='18px 0';
+  }
+});
+
+// Subtle mouse parallax on hero orbs
+document.addEventListener('mousemove',(e)=>{
+  const mx=(e.clientX/window.innerWidth-.5)*20;
+  const my=(e.clientY/window.innerHeight-.5)*20;
+  document.querySelectorAll('.orb').forEach((o,i)=>{
+    const factor=(i+1)*0.4;
+    o.style.transform=`translate(${mx*factor}px,${my*factor}px)`;
+  });
+});
+</script>
+</body>
+</html>

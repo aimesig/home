@@ -283,9 +283,9 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;ba
 
 /* The animated card lives inside each row */
 .ecosystem-visual{position:relative;
-  height:clamp(340px,52vh,640px);
-  width:100%;display:flex;align-items:stretch}
-.ecosystem-visual-shell{position:relative;width:100%;height:100%;
+  height:clamp(300px,52vh,640px);
+  min-height:300px;width:100%;display:flex;align-items:stretch}
+.ecosystem-visual-shell{position:relative;width:100%;height:100%;min-height:300px;
   border:1px solid rgba(255,255,255,.10);border-radius:clamp(18px,2.4vw,36px);
   background:radial-gradient(circle at 50% 40%,rgba(106,109,255,.09),transparent 38%),
   linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
@@ -465,7 +465,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;ba
   .section-head{grid-template-columns:1fr;gap:clamp(16px,3vw,28px)}
   .section-head p{max-width:600px}
   .eco-row{grid-template-columns:1fr;gap:clamp(20px,3vh,32px);padding:clamp(36px,6vh,64px) 0}
-  .ecosystem-visual{height:min(52svh,520px)}
+  .ecosystem-visual{height:clamp(300px,52svh,520px);min-height:300px}
   .eco-chapter{padding:0}
   .career-wrap{grid-template-columns:1fr}
   .career-card{position:relative;top:auto}
@@ -489,7 +489,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;ba
 
 /* ─── PHONE LANDSCAPE (≤768px, landscape) ───────────────────────────────── */
 @media(orientation:landscape) and (max-width:900px){
-  .ecosystem-visual{height:min(78svh,480px);top:max(56px,env(safe-area-inset-top))}
+  .ecosystem-visual{height:clamp(260px,78svh,480px);min-height:260px;top:max(56px,env(safe-area-inset-top))}
   .eco-chapter{min-height:90svh;padding-bottom:10vh}
   .hero{min-height:100svh;padding-top:max(90px,calc(var(--safe-top) + 70px))}
   .story-stage{height:100svh}
@@ -519,7 +519,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;ba
 
   /* Ecosystem */
   .eco-row{gap:clamp(16px,3vh,24px);padding:clamp(28px,5vh,48px) 0}
-  .ecosystem-visual{height:min(56svh,440px)}
+  .ecosystem-visual{height:clamp(300px,68svh,440px);min-height:300px}
   .ecosystem-visual-shell{border-radius:18px}
   .eco-visual-top{grid-template-columns:auto auto;row-gap:4px;column-gap:8px}
   .eco-visual-top .eco-scene-name{grid-column:1/-1;grid-row:2;text-align:left;font-size:8px}
@@ -1026,49 +1026,147 @@ function fitCanvas(canvas){
 }
 
 // ─── STORY SCENE ARTS ─────────────────────────────────────────────────────────
+const aimeSigLogo = new Image();
+aimeSigLogo.decoding='async';
+aimeSigLogo.crossOrigin='anonymous';
+aimeSigLogo.src='https://raw.githubusercontent.com/aimesig/home/main/logo_p.png';
+
 function drawStoryAI(ctx,w,h,t){
-  const cx=w*(.62+(pointer.x-.5)*.04),cy=h*(.44+(pointer.y-.5)*.04);
-  const R=Math.min(w,h)*.21;
-  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2.2);
-  bg.addColorStop(0,'rgba(106,109,255,.18)');bg.addColorStop(.5,'rgba(67,216,255,.04)');bg.addColorStop(1,'transparent');
+  const compact=w<700, ultra=w<390;
+  const cyan='#64e7ff', violet='#8e86ff', lime='#d7ff74', white='rgba(248,250,255,.96)';
+  // Desktop: artwork sits to the right of the copy. Mobile: centered higher so the copy remains clear below.
+  const cx=w*(compact?.53:.67)+(pointer.x-.5)*w*.025;
+  const cy=h*(compact?(ultra?.31:.33):.49)+(pointer.y-.5)*h*.018;
+  const S=Math.min(w,h);
+  const R=Math.max(74,Math.min(S*(compact?(ultra?.235:.26):.255),205));
+  const nodeCount=compact?(ultra?14:18):28;
+  const orbitCount=compact?2:4;
+
+  // Deep, soft intelligence field.
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2.65);
+  bg.addColorStop(0,'rgba(106,109,255,.19)');
+  bg.addColorStop(.28,'rgba(67,216,255,.08)');
+  bg.addColorStop(.58,'rgba(168,145,255,.035)');
+  bg.addColorStop(1,'transparent');
   ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
-  for(let j=0;j<4;j++){
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(t*.10*(j%2?-1:1)+j*.7);
-    ctx.strokeStyle=`rgba(${150+j*22},${155+j*15},255,.${20-j*3})`;
-    ctx.setLineDash([4,10]);ctx.lineWidth=.8;
-    ctx.beginPath();ctx.ellipse(0,0,R*(.52+j*.16),R*(.22+j*.07),0,0,Math.PI*2);ctx.stroke();ctx.restore();
+
+  // Rotating neural orbit field.
+  for(let j=0;j<orbitCount;j++){
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(t*.045*(j%2?-1:1)+j*.61);
+    ctx.strokeStyle=j%2?'rgba(100,230,255,.12)':'rgba(155,145,255,.12)';
+    ctx.lineWidth=.75;
+    ctx.setLineDash(j%2?[3,11]:[7,14]);
+    ctx.beginPath();
+    ctx.ellipse(0,0,R*(.72+j*.12),R*(.34+j*.055),0,0,Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
   }
-  const sph=ctx.createRadialGradient(cx-R*.08,cy-R*.08,2,cx,cy,R*.12);
-  sph.addColorStop(0,'rgba(255,255,255,.95)');sph.addColorStop(.3,'rgba(180,185,255,.85)');sph.addColorStop(1,'rgba(80,84,220,.4)');
-  ctx.shadowBlur=35;ctx.shadowColor='rgba(110,112,255,.7)';
-  ctx.fillStyle=sph;ctx.beginPath();ctx.arc(cx,cy,R*.11,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+
+  // Central AI core.
+  const coreR=R*(compact?.40:.43);
+  ctx.save();
+  ctx.shadowBlur=R*.34;ctx.shadowColor='rgba(92,116,255,.34)';
+  const core=ctx.createRadialGradient(cx-coreR*.35,cy-coreR*.35,2,cx,cy,coreR*1.15);
+  core.addColorStop(0,'rgba(45,51,88,.98)');
+  core.addColorStop(.52,'rgba(13,18,35,.98)');
+  core.addColorStop(1,'rgba(5,8,16,.98)');
+  ctx.fillStyle=core;
+  ctx.strokeStyle='rgba(180,224,255,.26)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cy,coreR,0,Math.PI*2);ctx.fill();ctx.stroke();
+
+  // Inner glass rings.
+  ctx.strokeStyle='rgba(100,230,255,.17)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cy,coreR*.78,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle='rgba(215,255,116,.12)';
+  ctx.beginPath();ctx.arc(cx,cy,coreR*.92,0,Math.PI*2);ctx.stroke();
+  ctx.restore();
+
+  // Use the exact same logo asset as the header, including the same compact framed treatment.
+  // Never replace the center mark with text: the header logo is the single source of truth.
+  const logoMax=Math.max(42,Math.min(R*.58,86));
+  const frame=logoMax*1.34;
+  ctx.save();
+  ctx.shadowBlur=R*.20;
+  ctx.shadowColor='rgba(84,172,255,.22)';
+  const fg=ctx.createLinearGradient(cx-frame/2,cy-frame/2,cx+frame/2,cy+frame/2);
+  fg.addColorStop(0,'rgba(255,255,255,.08)');
+  fg.addColorStop(1,'rgba(255,255,255,.025)');
+  ctx.fillStyle=fg;
+  ctx.strokeStyle='rgba(255,255,255,.17)';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.roundRect(cx-frame/2,cy-frame/2,frame,frame,Math.min(14,frame*.18));
+  ctx.fill();ctx.stroke();
+  ctx.restore();
+
+  if(aimeSigLogo.complete && aimeSigLogo.naturalWidth){
+    const ratio=aimeSigLogo.naturalWidth/aimeSigLogo.naturalHeight||1;
+    const lh=logoMax, lw=lh*ratio;
+    const maxW=frame*.78;
+    const scale=Math.min(1,maxW/lw);
+    ctx.save();
+    ctx.globalAlpha=.99;
+    ctx.shadowBlur=R*.13;
+    ctx.shadowColor='rgba(215,255,116,.22)';
+    ctx.drawImage(aimeSigLogo,cx-(lw*scale)/2,cy-(lh*scale)/2,lw*scale,lh*scale);
+    ctx.restore();
+  }
+  eText(ctx,'AI CORE',cx,cy+coreR*.63,'rgba(215,255,116,.62)',Math.max(7,Math.min(10,R*.055)),'center');
+
+  // Neural nodes distributed around the core.
   const pts=[];
-  for(let i=0;i<26;i++){
-    const a=i*Math.PI*2/26+t*.09*(i%2?1:-1);
-    const r=R*(.68+.24*Math.sin(i*1.6+t*.6));
-    pts.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r*.65,i});
+  for(let i=0;i<nodeCount;i++){
+    const a=i*Math.PI*2/nodeCount+t*.055*(i%2?1:-1);
+    const ripple=.92+.10*Math.sin(t*.8+i*1.7);
+    const rr=R*(1.08+.13*Math.sin(i*1.31+t*.45))*ripple;
+    pts.push({x:cx+Math.cos(a)*rr,y:cy+Math.sin(a)*rr*.62,a,i});
   }
+
+  // Local neural connections, kept sparse and elegant.
   pts.forEach((p,i)=>{
-    for(let k=1;k<4;k++){
+    [1,2].forEach(k=>{
       const q=pts[(i+k)%pts.length];
-      ctx.save();ctx.globalAlpha=.09;ctx.strokeStyle=i%2?'#8a8dff':'#4ddeff';
-      ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();ctx.restore();
+      ctx.save();
+      ctx.globalAlpha=.075+(k===1?.025:0);
+      ctx.strokeStyle=i%2?cyan:violet;
+      ctx.lineWidth=.65;
+      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+      ctx.restore();
+    });
+    // Every few nodes connect directly into the AI core.
+    if(i%3===0){
+      eLine(ctx,p.x,p.y,cx+(p.x-cx)*.47,cy+(p.y-cy)*.47,i%2?cyan:violet,.10,.75);
     }
   });
+
+  // Glowing node points.
   pts.forEach((p,i)=>{
-    const bright=i%5===0;
-    ctx.save();ctx.shadowBlur=bright?24:12;ctx.shadowColor=bright?'rgba(70,235,255,.9)':'rgba(160,155,255,.6)';
-    ctx.fillStyle=bright?'rgba(70,235,255,.9)':'rgba(175,170,255,.65)';
-    ctx.beginPath();ctx.arc(p.x,p.y,bright?3.2:1.8,0,Math.PI*2);ctx.fill();ctx.restore();
+    const active=i%5===0;
+    eDot(ctx,p.x,p.y,active?Math.max(2.6,R*.020):Math.max(1.5,R*.011),active?cyan:(i%2?violet:'rgba(205,210,255,.68)'),active?R*.13:R*.065);
   });
-  for(let i=0;i<9;i++){
-    const a=t*.62+i*.7;const r=R*(.80+.08*Math.sin(t+i));
-    const px=cx+Math.cos(a)*r,py=cy+Math.sin(a)*r*.65;
-    ctx.save();ctx.shadowBlur=20;ctx.shadowColor='rgba(214,255,115,.9)';
-    ctx.fillStyle='rgba(214,255,115,.85)';ctx.beginPath();ctx.arc(px,py,2.5,0,Math.PI*2);ctx.fill();ctx.restore();
+
+  // Live inference packets orbit the network.
+  const packets=compact?5:9;
+  for(let i=0;i<packets;i++){
+    const a=t*(.52+(i%2)*.09)+i*Math.PI*2/packets;
+    const rr=R*(1.03+.16*Math.sin(t+i*.7));
+    const px=cx+Math.cos(a)*rr,py=cy+Math.sin(a)*rr*.62;
+    eDot(ctx,px,py,Math.max(1.7,R*.013),i%3===0?lime:cyan,R*.09);
   }
-  ctx.save();ctx.globalAlpha=.38;ctx.fillStyle='#8a8bff';ctx.font='500 10px Inter,sans-serif';
-  ctx.fillText('INFERENCE',cx-R*.9,cy-R*.45);ctx.fillText('LANGUAGE',cx+R*.55,cy-R*.5);ctx.fillText('VISION',cx+R*.75,cy+R*.55);ctx.restore();
+
+  // System labels sit outside the network on desktop and collapse cleanly on phones.
+  if(!compact){
+    eText(ctx,'LANGUAGE',cx-R*1.03,cy-R*.54,'rgba(100,230,255,.58)',9,'center');
+    eText(ctx,'VISION',cx+R*1.05,cy-R*.46,'rgba(142,134,255,.62)',9,'center');
+    eText(ctx,'AUTOMATION',cx+R*1.05,cy+R*.52,'rgba(215,255,116,.56)',9,'center');
+    eText(ctx,'ANALYTICS',cx-R*1.02,cy+R*.60,'rgba(100,230,255,.56)',9,'center');
+  }else{
+    eText(ctx,'LLM',cx-R*.93,cy-R*.64,'rgba(100,230,255,.55)',7.5,'center');
+    eText(ctx,'VISION',cx+R*.94,cy-R*.61,'rgba(142,134,255,.58)',7.5,'center');
+    eText(ctx,'AI / ML',cx,cy+R*1.02,'rgba(215,255,116,.52)',7.5,'center');
+  }
 }
 
 function drawStoryApps(ctx,w,h,t){
@@ -1099,21 +1197,145 @@ function drawStoryApps(ctx,w,h,t){
 }
 
 function drawStoryIoT(ctx,w,h,t){
-  const cx=w*.67,cy=h*.50;const R=Math.min(w,h)*.20;
-  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2.5);
-  bg.addColorStop(0,'rgba(67,216,255,.16)');bg.addColorStop(1,'transparent');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
-  const nodes=[];
-  for(let i=0;i<15;i++){const a=i*Math.PI*2/15+t*.09*(i%2?1:-1);const r=R*(.6+.2*Math.sin(i*2.1));nodes.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r*.6,i});}
+  // Responsive "03 / CONNECTION" artwork.
+  // Desktop: composition sits to the right of the story copy.
+  // Mobile: composition moves up and centers itself so it never competes with the copy.
+  const compact=w<700;
+  const ultra=w<390;
+  const cyan='#64e7ff',violet='#8d88ff',lime='#d7ff74';
+  const cx=w*(compact?.50:.67);
+  const cy=h*(compact?(ultra?.31:.34):.49);
+  const S=Math.min(w,h);
+  const R=Math.max(58,Math.min(S*(compact?(ultra?.20:.235):.255),205));
+
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2.65);
+  bg.addColorStop(0,'rgba(55,210,255,.17)');
+  bg.addColorStop(.42,'rgba(76,95,220,.07)');
+  bg.addColorStop(1,'transparent');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+
+  // Soft orbit rings create depth without making the small-screen version dense.
+  for(let j=0;j<(compact?3:4);j++){
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(t*.045*(j%2?-1:1)+j*.48);
+    ctx.strokeStyle=j===0?'rgba(100,230,255,.15)':'rgba(145,140,255,.11)';
+    ctx.lineWidth=.8;
+    ctx.setLineDash([5,13]);
+    ctx.beginPath();
+    ctx.ellipse(0,0,R*(.76+j*.16),R*(.39+j*.075),0,0,Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  const gw=Math.max(compact?112:138,Math.min(R*1.48,compact?170:220));
+  const gh=gw*.62;
+  const nodeW=Math.max(24,Math.min(compact?34:42,S*.07));
+  const nodeH=nodeW*.68;
+  const nodeR=Math.max(5,nodeW*.20);
+  const gapX=Math.max(nodeW*1.15,R*.72);
+  const gapY=Math.max(nodeH*1.45,R*.48);
+  const leftX=Math.max(nodeW+.06*w,cx-gapX);
+  const rightX=Math.min(w-nodeW-.06*w,cx+gapX);
+  const sideTop=cy-gapY;
+  const sideBottom=cy+gapY;
+  const cloudR=Math.max(15,Math.min(25,R*.12));
+  const cloudY=Math.max(cloudR+20,cy-gh*.5-cloudR*2.05);
+
+  const nodes=[
+    {x:leftX,y:sideTop,accent:cyan},
+    {x:leftX,y:sideBottom,accent:violet},
+    {x:rightX,y:sideTop,accent:cyan},
+    {x:rightX,y:sideBottom,accent:violet}
+  ];
+
+  // Cloud sits above the gateway and remains visually detached from it.
+  ctx.save();
+  ctx.shadowBlur=Math.max(18,R*.12);
+  ctx.shadowColor='rgba(100,230,255,.26)';
+  ctx.fillStyle='rgba(9,18,28,.94)';
+  ctx.strokeStyle='rgba(170,240,255,.30)';
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cloudY,cloudR,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.restore();
+  eText(ctx,'CLOUD',cx,cloudY+3,'rgba(245,252,255,.80)',Math.max(7,Math.min(10,S*.026)),'center');
+
+  // Gateway body.
+  ctx.save();
+  ctx.shadowBlur=Math.max(30,R*.25);
+  ctx.shadowColor='rgba(75,215,255,.28)';
+  const gateGrad=ctx.createLinearGradient(cx-gw/2,cy-gh/2,cx+gw/2,cy+gh/2);
+  gateGrad.addColorStop(0,'rgba(13,25,37,.98)');
+  gateGrad.addColorStop(.55,'rgba(7,15,25,.98)');
+  gateGrad.addColorStop(1,'rgba(5,10,17,.98)');
+  ctx.fillStyle=gateGrad;
+  ctx.strokeStyle='rgba(165,235,255,.48)';
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(cx-gw/2,cy-gh/2,gw,gh,Math.max(13,gw*.16));ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;
+
+  ctx.strokeStyle='rgba(100,230,255,.13)';
+  ctx.beginPath();ctx.roundRect(cx-gw*.39,cy-gh*.32,gw*.78,gh*.64,Math.max(8,gw*.10));ctx.stroke();
+
+  // Hardware details.
+  const lightR=Math.max(2,Math.min(3.2,gw*.018));
+  for(let i=0;i<4;i++){
+    const lx=cx-gw*.30+i*gw*.20;
+    eDot(ctx,lx,cy-gh*.29,lightR,i===1?lime:'rgba(100,230,255,.62)',10);
+  }
+  eDot(ctx,cx,cy+gh*.28,Math.max(2.2,gw*.020),lime,Math.max(12,R*.08));
+  ctx.restore();
+
+  // Center typography.
+  eText(ctx,'EDGE',cx,cy-gw*.045,'rgba(244,253,255,.95)',Math.max(11,Math.min(18,gw*.095)),'center');
+  eText(ctx,'GATEWAY',cx,cy+gw*.085,'rgba(100,225,255,.84)',Math.max(8,Math.min(12,gw*.058)),'center');
+  eText(ctx,'REALTIME',cx,cy+gw*.185,'rgba(255,255,255,.40)',Math.max(6.5,Math.min(9,gw*.040)),'center');
+
+  // Node links + animated packets.
   nodes.forEach((p,i)=>{
-    ctx.save();ctx.globalAlpha=.12;ctx.strokeStyle=i%3===0?'#64e6ff':'#9090ff';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(cx,cy);ctx.stroke();ctx.restore();
-    const q=nodes[(i+2)%nodes.length];ctx.save();ctx.globalAlpha=.06;ctx.strokeStyle='#9098ff';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();ctx.restore();
-    ctx.save();ctx.translate(p.x,p.y);ctx.strokeStyle=i%3===0?'rgba(100,230,255,.38)':'rgba(130,130,255,.28)';ctx.fillStyle='rgba(8,12,20,.88)';ctx.lineWidth=.8;ctx.beginPath();ctx.roundRect(-13,-9,26,18,5);ctx.fill();ctx.stroke();ctx.fillStyle=i%3===0?'#64e6ff':'rgba(255,255,255,.18)';ctx.fillRect(-4,-1.5,8*(Math.sin(t*1.5+i)*.3+.7),3);ctx.restore();
-    ctx.save();ctx.shadowBlur=20;ctx.shadowColor=i%3===0?'rgba(100,230,255,.8)':'rgba(160,155,255,.65)';ctx.fillStyle=i%3===0?'rgba(100,230,255,.85)':'rgba(160,155,255,.7)';ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);ctx.fill();ctx.restore();
+    const side=p.x<cx?-1:1;
+    const edgeX=cx+side*(gw/2);
+    const bendY=cy+(p.y-cy)*.58;
+    eLine(ctx,p.x,p.y,edgeX,bendY,p.accent,.17,Math.max(.8,R*.008));
+    const u=(t*.34+i*.21)%1;
+    const px=p.x+(edgeX-p.x)*u;
+    const py=p.y+(bendY-p.y)*u;
+    eDot(ctx,px,py,Math.max(1.8,R*.015),i%2?lime:cyan,Math.max(10,R*.085));
+
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.fillStyle='rgba(7,14,22,.96)';
+    ctx.strokeStyle=p.accent===cyan?'rgba(100,230,255,.52)':'rgba(140,136,255,.50)';
+    ctx.lineWidth=.9;
+    ctx.beginPath();ctx.roundRect(-nodeW/2,-nodeH/2,nodeW,nodeH,nodeR);ctx.fill();ctx.stroke();
+    ctx.fillStyle=p.accent;
+    ctx.fillRect(-nodeW*.19,-nodeH*.09,nodeW*.38,nodeH*.18);
+    ctx.restore();
   });
-  ctx.save();ctx.shadowBlur=50;ctx.shadowColor='rgba(67,216,255,.35)';ctx.strokeStyle='rgba(100,230,255,.42)';ctx.fillStyle='rgba(6,10,18,.92)';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(cx-46,cy-36,92,72,18);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
-  ctx.fillStyle='rgba(255,255,255,.85)';ctx.font='700 10px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('EDGE',cx,cy-4);ctx.fillStyle='rgba(67,216,255,.7)';ctx.font='400 8px Inter,sans-serif';ctx.fillText('GATEWAY',cx,cy+12);ctx.restore();
-  for(let i=0;i<6;i++){const p=nodes[i*2%nodes.length];const u=(t*.55+i/6)%1;const px=p.x+(cx-p.x)*u,py=p.y+(cy-p.y)*u;ctx.save();ctx.shadowBlur=16;ctx.shadowColor='rgba(214,255,116,.9)';ctx.fillStyle='rgba(214,255,116,.88)';ctx.beginPath();ctx.arc(px,py,2.8,0,Math.PI*2);ctx.fill();ctx.restore();}
-  ctx.save();ctx.globalAlpha=.32;ctx.fillStyle='#64e6ff';ctx.font='500 9px Inter,sans-serif';ctx.textAlign='left';ctx.fillText('BLE',cx-R*.7,cy-R*.55);ctx.fillText('MQTT',cx+R*.55,cy-R*.4);ctx.fillText('EDGE',cx+R*.65,cy+R*.45);ctx.restore();
+
+  // Cloud <-> gateway stream.
+  eLine(ctx,cx,cloudY+cloudR,cx,cy-gh/2,cyan,.20,Math.max(.8,R*.008));
+  for(let i=0;i<3;i++){
+    const u=(t*.28+i/3)%1;
+    const py=cloudY+cloudR+(cy-gh/2-(cloudY+cloudR))*u;
+    eDot(ctx,cx,py,Math.max(1.7,R*.014),lime,Math.max(9,R*.07));
+  }
+
+  // Labels deliberately live beside the nodes, not over the gateway.
+  const labelSize=Math.max(7,Math.min(10,S*.026));
+  eText(ctx,'BLE',leftX,sideTop-nodeH*.82,'rgba(100,230,255,.62)',labelSize,'center');
+  eText(ctx,'EDGE',leftX,sideBottom+nodeH*.95,'rgba(140,136,255,.58)',labelSize,'center');
+  eText(ctx,'MQTT',rightX,sideTop-nodeH*.82,'rgba(100,230,255,.62)',labelSize,'center');
+  eText(ctx,'EDGE',rightX,sideBottom+nodeH*.95,'rgba(140,136,255,.58)',labelSize,'center');
+
+  // A few flowing packets reinforce the "one signal, everywhere" idea.
+  for(let i=0;i<(compact?4:7);i++){
+    const p=nodes[i%nodes.length];
+    const u=(t*.42+i/(compact?4:7))%1;
+    const px=p.x+(cx-p.x)*u;
+    const py=p.y+(cy-p.y)*u;
+    eDot(ctx,px,py,Math.max(1.6,R*.012),i%2?lime:cyan,Math.max(8,R*.06));
+  }
 }
 
 function drawStoryEmbedded(ctx,w,h,t){
@@ -1127,8 +1349,31 @@ function drawStoryEmbedded(ctx,w,h,t){
   const dieGrad=ctx.createRadialGradient(cx-sz*.15,cy-sz*.15,4,cx,cy,sz*.85);
   dieGrad.addColorStop(0,'#d0d8ff');dieGrad.addColorStop(.2,'#6874ff');dieGrad.addColorStop(.7,'#272a44');dieGrad.addColorStop(1,'#10111a');
   ctx.beginPath();ctx.roundRect(cx-sz*.42,cy-sz*.42,sz*.84,sz*.84,18);ctx.fillStyle=dieGrad;ctx.fill();ctx.strokeStyle='rgba(180,185,255,.22)';ctx.stroke();
-  ctx.fillStyle='rgba(255,255,255,.88)';ctx.font='700 11px "Space Grotesk",sans-serif';ctx.textAlign='center';ctx.fillText('AIMESIG',cx,cy+4);
-  ctx.fillStyle='rgba(215,255,116,.6)';ctx.font='400 8px Inter,sans-serif';ctx.fillText('SYSTEM ON CHIP',cx,cy+18);ctx.restore();
+
+  // Aimesig brand mark above the AIMESIG wordmark, matching the header logo asset.
+  const chipLogoSize=Math.max(24,Math.min(sz*.30,58));
+  const chipLogoY=cy-sz*.20;
+  if(aimeSigLogo.complete && aimeSigLogo.naturalWidth){
+    const ratio=aimeSigLogo.naturalWidth/aimeSigLogo.naturalHeight||1;
+    const lh=chipLogoSize, lw=lh*ratio;
+    const maxW=sz*.46;
+    const scale=Math.min(1,maxW/lw);
+    ctx.save();
+    ctx.globalAlpha=.98;
+    ctx.shadowBlur=Math.min(18,sz*.11);
+    ctx.shadowColor='rgba(215,255,116,.28)';
+    ctx.drawImage(aimeSigLogo,cx-(lw*scale)/2,chipLogoY-(lh*scale)/2,lw*scale,lh*scale);
+    ctx.restore();
+  }
+
+  ctx.fillStyle='rgba(255,255,255,.92)';
+  ctx.font='700 '+Math.max(9,Math.min(13,sz*.085))+'px "Space Grotesk",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('AIMESIG',cx,cy+sz*.09);
+  ctx.fillStyle='rgba(215,255,116,.62)';
+  ctx.font='400 '+Math.max(6,Math.min(9,sz*.052))+'px Inter,sans-serif';
+  ctx.fillText('SYSTEM ON CHIP',cx,cy+sz*.27);
+  ctx.restore();
   for(let i=-4;i<=4;i++){
     const y=cy+i*20;const lpx=cx-sz-42;
     ctx.save();ctx.shadowBlur=8;ctx.shadowColor='rgba(68,228,255,.5)';ctx.strokeStyle='rgba(68,228,255,.55)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(lpx,y);ctx.lineTo(cx-sz,y);ctx.stroke();ctx.fillStyle='rgba(68,228,255,.5)';ctx.beginPath();ctx.arc(lpx,y,2.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.restore();
@@ -1185,7 +1430,9 @@ function eLine(ctx,x1,y1,x2,y2,c,a=.18,w=1){ctx.save();ctx.strokeStyle=c;ctx.glo
 function eText(ctx,text,x,y,fill='rgba(255,255,255,.4)',size=9,align='left'){ctx.save();ctx.fillStyle=fill;ctx.font=`600 ${size}px Inter,sans-serif`;ctx.textAlign=align;ctx.fillText(text,x,y);ctx.restore();}
 
 function drawEcoAI(ctx,w,h,t){
-  const cx=w*.52,cy=h*.51,R=Math.min(w,h)*.23;
+  const S=Math.min(w,h);
+  const cx=w*.52,cy=h*.50;
+  const R=Math.max(72,Math.min(S*.25,170));
   const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2.3);
   bg.addColorStop(0,'rgba(106,109,255,.20)');bg.addColorStop(.5,'rgba(67,216,255,.06)');bg.addColorStop(1,'transparent');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
   for(let j=0;j<5;j++){ctx.save();ctx.translate(cx,cy);ctx.rotate(t*.08*(j%2?-1:1)+j*.55);ctx.strokeStyle=`rgba(${140+j*20},${145+j*14},255,.${18-j*2})`;ctx.setLineDash([4,11]);ctx.lineWidth=.8;ctx.beginPath();ctx.ellipse(0,0,R*(.5+j*.16),R*(.20+j*.07),0,0,Math.PI*2);ctx.stroke();ctx.restore();}
@@ -1199,38 +1446,289 @@ function drawEcoAI(ctx,w,h,t){
 }
 
 function drawEcoIoT(ctx,w,h,t){
-  const cx=w*.52,cy=h*.52,S=Math.min(w,h);const cyan='#64e7ff',violet='#8d88ff',lime='#d7ff74';
-  const bg=ctx.createRadialGradient(cx,cy,20,cx,cy,S*.55);bg.addColorStop(0,'rgba(42,205,255,.16)');bg.addColorStop(.45,'rgba(92,104,255,.07)');bg.addColorStop(1,'transparent');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
-  const nodes=[];const count=16;for(let i=0;i<count;i++){const a=i*Math.PI*2/count+t*.033*(i%2?1:-1);const rx=S*(.26+.035*Math.sin(i*1.9)),ry=S*(.18+.025*Math.cos(i*1.2));nodes.push({x:cx+Math.cos(a)*rx,y:cy+Math.sin(a)*ry});}
-  ctx.save();ctx.shadowBlur=55;ctx.shadowColor='rgba(100,230,255,.22)';ctx.fillStyle='rgba(12,17,26,.92)';ctx.strokeStyle='rgba(180,240,255,.34)';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(cx-58,cy-43,116,86,22);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='rgba(100,230,255,.18)';ctx.beginPath();ctx.roundRect(cx-45,cy-30,90,60,15);ctx.stroke();ctx.restore();
-  eText(ctx,'EDGE GATEWAY',cx,cy-7,'rgba(235,250,255,.88)',9,'center');eText(ctx,'REALTIME',cx,cy+12,'rgba(102,226,255,.7)',8,'center');eDot(ctx,cx,cy+27,2.5,lime,15);
-  nodes.forEach((p,i)=>{eLine(ctx,p.x,p.y,cx,cy,i%3===0?cyan:violet,.14,1);const q=nodes[(i+1)%count];eLine(ctx,p.x,p.y,q.x,q.y,'#a1a6ff',.055,.7);const u=(t*.45+i*.13)%1;const px=p.x+(cx-p.x)*u,py=p.y+(cy-p.y)*u;eDot(ctx,px,py,2.2,i%3===0?cyan:lime,18);eDot(ctx,p.x,p.y,4.2,i%3===0?cyan:violet,22);ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle='rgba(9,13,20,.92)';ctx.strokeStyle=i%3===0?'rgba(100,230,255,.42)':'rgba(140,136,255,.34)';ctx.beginPath();ctx.roundRect(-13,-10,26,20,6);ctx.fill();ctx.stroke();ctx.fillStyle=i%4===0?lime:cyan;ctx.fillRect(-5,-2,10,4);ctx.restore();});
-  const cloudY=cy-S*.30;eLine(ctx,cx,cy-44,cx,cloudY+30,cyan,.22,1.2);for(let i=0;i<4;i++){const u=(t*.38+i/4)%1;eDot(ctx,cx,cy-44+(cloudY+30-(cy-44))*u,lime,2.1,17);}
-  ctx.save();ctx.shadowBlur=35;ctx.shadowColor='rgba(200,255,255,.16)';ctx.fillStyle='rgba(16,22,28,.9)';ctx.strokeStyle='rgba(186,244,255,.26)';ctx.beginPath();ctx.arc(cx,cloudY,34,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();
-  eText(ctx,'CLOUD',cx,cloudY-2,'rgba(245,252,255,.78)',8,'center');
+  // Responsive Edge Gateway composition.
+  // Keep the gateway dominant, while moving nodes/labels outward on narrow canvases.
+  const S=Math.min(w,h);
+  const cyan='#64e7ff',violet='#8d88ff',lime='#d7ff74';
+  const compact=S<280;
+  const cx=w*.50;
+  const cy=h*(compact?.57:.52);
+
+  const gw=Math.min(w*(compact?.46:.42),190);
+  const gh=gw*.68;
+  const nodeW=Math.max(20,Math.min(32,S*.105));
+  const nodeH=Math.max(16,nodeW*.74);
+  const nodeR=Math.max(4,nodeW*.22);
+  const sideX=Math.max(nodeW*.82,Math.min(w*.18,compact?w*.17:w*.14));
+  const sideY=Math.max(17,Math.min(h*.23,S*.105));
+  const cloudR=Math.max(13,Math.min(24,S*.075));
+  const cloudY=Math.max(cloudR+8,cy-gh/2-cloudR*2.0);
+
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,S*.65);
+  bg.addColorStop(0,'rgba(42,205,255,.17)');
+  bg.addColorStop(.45,'rgba(92,104,255,.065)');
+  bg.addColorStop(1,'transparent');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+
+  // Six readable edge nodes instead of a dense 16-node ring on small screens.
+  const nodes=[
+    {x:sideX,y:cy-sideY,type:'ble'},
+    {x:sideX,y:cy,type:'ble'},
+    {x:sideX,y:cy+sideY,type:'edge'},
+    {x:w-sideX,y:cy-sideY,type:'mqtt'},
+    {x:w-sideX,y:cy,type:'mqtt'},
+    {x:w-sideX,y:cy+sideY,type:'edge'}
+  ];
+
+  // Gateway body.
+  ctx.save();
+  ctx.shadowBlur=Math.max(28,S*.14);
+  ctx.shadowColor='rgba(100,230,255,.28)';
+  ctx.fillStyle='rgba(9,14,23,.95)';
+  ctx.strokeStyle='rgba(165,235,255,.42)';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.roundRect(cx-gw/2,cy-gh/2,gw,gh,Math.max(10,gw*.16));
+  ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;
+  ctx.strokeStyle='rgba(100,230,255,.17)';
+  ctx.beginPath();
+  ctx.roundRect(cx-gw*.39,cy-gh*.34,gw*.78,gh*.68,Math.max(7,gw*.11));
+  ctx.stroke();
+
+  // Status lights and subtle hardware details.
+  for(let i=0;i<3;i++){
+    const lx=cx-gw*.31+i*gw*.31;
+    eDot(ctx,lx,cy-gh*.30,2.1,i===1?lime:'rgba(100,230,255,.48)',10);
+  }
+  eDot(ctx,cx,cy+gh*.25,Math.max(2.1,S*.0075),lime,Math.max(10,S*.035));
+  ctx.restore();
+
+  // Gateway typography stays centered and readable.
+  eText(ctx,'EDGE',cx,cy-gw*.035,'rgba(241,252,255,.94)',Math.max(9,Math.min(13,S*.052)),'center');
+  eText(ctx,'GATEWAY',cx,cy+gw*.085,'rgba(102,226,255,.78)',Math.max(7.5,Math.min(10,S*.036)),'center');
+  eText(ctx,'REALTIME',cx,cy+gw*.19,'rgba(255,255,255,.42)',Math.max(6.5,Math.min(8.5,S*.029)),'center');
+
+  // Connections and animated packets.
+  nodes.forEach((p,i)=>{
+    const side=p.x<cx?-1:1;
+    const edgeX=cx+side*(gw/2);
+    eLine(ctx,p.x,p.y,edgeX,cy+(p.y-cy)*.58,i%2?violet:cyan,.16,Math.max(.7,S*.003));
+    const u=(t*.34+i*.15)%1;
+    const px=p.x+(edgeX-p.x)*u;
+    const py=p.y+(cy+(p.y-cy)*.58-p.y)*u;
+    eDot(ctx,px,py,Math.max(1.7,S*.006),i%2?lime:cyan,Math.max(10,S*.04));
+
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.fillStyle='rgba(8,13,21,.95)';
+    ctx.strokeStyle=i%2?'rgba(140,136,255,.48)':'rgba(100,230,255,.52)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(-nodeW/2,-nodeH/2,nodeW,nodeH,nodeR);ctx.fill();ctx.stroke();
+    ctx.fillStyle=i%2?violet:cyan;
+    ctx.fillRect(-nodeW*.20,-nodeH*.10,nodeW*.40,nodeH*.20);
+    ctx.restore();
+  });
+
+  // Cloud link and cloud icon above the gateway.
+  eLine(ctx,cx,cy-gh/2,cx,cloudY+cloudR*.72,cyan,.22,Math.max(.8,S*.003));
+  for(let i=0;i<3;i++){
+    const u=(t*.28+i/3)%1;
+    const py=cy-gh/2+(cloudY+cloudR*.72-(cy-gh/2))*u;
+    eDot(ctx,cx,py,Math.max(1.6,S*.005),lime,Math.max(9,S*.035));
+  }
+
+  ctx.save();
+  ctx.shadowBlur=Math.max(20,S*.09);
+  ctx.shadowColor='rgba(200,255,255,.18)';
+  ctx.fillStyle='rgba(13,20,27,.94)';
+  ctx.strokeStyle='rgba(186,244,255,.30)';
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(cx,cloudY,cloudR,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.restore();
+  eText(ctx,'CLOUD',cx,cloudY+2.5,'rgba(245,252,255,.82)',Math.max(6.5,Math.min(9,S*.028)),'center');
+
+  // Interface labels stay outside the gateway and never overlap it.
+  const labelSize=Math.max(7,Math.min(9,S*.030));
+  eText(ctx,'BLE',sideX,cy-sideY-nodeH*.72,'rgba(100,230,255,.55)',labelSize,'center');
+  eText(ctx,'MQTT',w-sideX,cy-sideY-nodeH*.72,'rgba(100,230,255,.55)',labelSize,'center');
+  eText(ctx,'EDGE',w-sideX,cy+sideY+nodeH*.78,'rgba(140,136,255,.52)',labelSize,'center');
 }
 
 function drawEcoCloud(ctx,w,h,t){
-  const cx=w*.52,cy=h*.51,S=Math.min(w,h);const lime='#d7ff74',cyan='#6be7ff',violet='#9c92ff';
-  const bg=ctx.createRadialGradient(cx,cy,10,cx,cy,S*.6);bg.addColorStop(0,'rgba(215,255,116,.15)');bg.addColorStop(.38,'rgba(122,255,194,.04)');bg.addColorStop(1,'transparent');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
-  for(let ring=0;ring<4;ring++){ctx.save();ctx.translate(cx,cy);ctx.rotate(t*.025*(ring+1));ctx.strokeStyle=`rgba(215,255,116,${.10-ring*.018})`;ctx.setLineDash([5,15]);ctx.lineWidth=.8;ctx.beginPath();ctx.ellipse(0,0,S*(.13+ring*.09),S*(.055+ring*.037),0,0,Math.PI*2);ctx.stroke();ctx.restore();}
-  const regions=[];for(let i=0;i<9;i++){const a=i*Math.PI*2/9+t*.025,r=S*(.20+.035*Math.sin(i*1.7));regions.push([cx+Math.cos(a)*r,cy+Math.sin(a)*r*.67]);}
-  ctx.save();ctx.translate(cx,cy);ctx.shadowBlur=45;ctx.shadowColor='rgba(215,255,116,.18)';ctx.fillStyle='rgba(18,23,17,.94)';ctx.strokeStyle='rgba(224,255,178,.33)';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(-64,-46,128,92,22);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='rgba(215,255,116,.16)';for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-40,-24+i*16);ctx.lineTo(40,-24+i*16);ctx.stroke();}ctx.restore();
-  eText(ctx,'CONTROL PLANE',cx,cy-7,'rgba(241,255,224,.88)',9,'center');eText(ctx,'LOAD BALANCER',cx,cy+10,'rgba(215,255,116,.72)',7,'center');eDot(ctx,cx,cy+26,2.5,lime,16);
-  regions.forEach((p,i)=>{eLine(ctx,p[0],p[1],cx,cy,i%2?lime:cyan,.12,1);const u=(t*.30+i*.11)%1;eDot(ctx,p[0]+(cx-p[0])*u,p[1]+(cy-p[1])*u,2.2,i%2?lime:cyan,18);eDot(ctx,p[0],p[1],4,i%2?lime:violet,20);ctx.save();ctx.translate(p[0],p[1]);ctx.strokeStyle='rgba(255,255,255,.16)';ctx.fillStyle='rgba(16,20,17,.84)';ctx.beginPath();ctx.roundRect(-18,-14,36,28,8);ctx.fill();ctx.stroke();for(let k=0;k<3;k++){ctx.fillStyle=k===0?cyan:'rgba(255,255,255,.18)';ctx.fillRect(-10,-7+k*7,20*(k===0?.6:.95),2);}ctx.restore();});
-  for(let i=0;i<8;i++){const p=regions[i%regions.length];const u=(t*.42+i/8)%1;eDot(ctx,cx+(p[0]-cx)*u,cy+(p[1]-cy)*u,2.3,i%2?cyan:lime,17);}
-}
+  // Responsive Aimesig Cloud architecture.
+  // The composition is driven by both width and height so it stays balanced
+  // on short phones, tall phones, tablets and desktop screens.
+  const minSide=Math.min(w,h);
+  const cyan='#6be7ff',lime='#d7ff74',violet='#a891ff',white='#f5f8ff';
+  const mobile=w<430 || minSide<300;
 
+  const cx=w*.50;
+  const cy=h*(mobile?.53:.50);
+  const base=Math.min(w*.82,h*.62);
+  const coreW=Math.max(150,Math.min(base*.72,310));
+  const coreH=Math.max(105,Math.min(coreW*.58,185));
+  const orbitX=Math.min(w*.38,230);
+  const orbitY=Math.min(h*.25,125);
+  const nodeW=Math.max(38,Math.min(minSide*.13,62));
+  const nodeH=Math.max(24,nodeW*.68);
+  const fontLabel=Math.max(7.5,Math.min(10.5,minSide*.030));
+  const fontTitle=Math.max(9,Math.min(13,minSide*.040));
+
+  // Soft system glow.
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.58);
+  bg.addColorStop(0,'rgba(215,255,116,.15)');
+  bg.addColorStop(.34,'rgba(107,231,255,.065)');
+  bg.addColorStop(.70,'rgba(168,145,255,.035)');
+  bg.addColorStop(1,'transparent');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+
+  // Orbit rings: restrained on small canvases, more cinematic on desktop.
+  for(let i=0;i<3;i++){
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(t*(.018+i*.008)*(i%2?-1:1)+i*.5);
+    ctx.strokeStyle=`rgba(${i===0?'107,231,255':i===1?'215,255,116':'168,145,255'},${mobile?.075:.10-i*.018})`;
+    ctx.lineWidth=.8;
+    ctx.setLineDash(i===0?[4,14]:[6,18]);
+    ctx.beginPath();
+    ctx.ellipse(0,0,orbitX*(.72+i*.15),orbitY*(.72+i*.14),0,0,Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Four infrastructure domains around the control plane.
+  const nodes=[
+    {x:cx-orbitX*.92,y:cy-orbitY*.82,label:'APIs',tone:cyan},
+    {x:cx+orbitX*.92,y:cy-orbitY*.82,label:'SCALE',tone:lime},
+    {x:cx-orbitX*.92,y:cy+orbitY*.82,label:'SECURITY',tone:violet},
+    {x:cx+orbitX*.92,y:cy+orbitY*.82,label:'OBSERVE',tone:cyan}
+  ];
+
+  // Connection lines and moving traffic.
+  nodes.forEach((n,i)=>{
+    const dx=cx-n.x,dy=cy-n.y;
+    const len=Math.hypot(dx,dy)||1;
+    const ex=n.x+dx*(nodeW*.52/len),ey=n.y+dy*(nodeH*.20/len);
+    const sx=cx-dx*(coreW*.42/len),sy=cy-dy*(coreH*.36/len);
+    eLine(ctx,n.x,n.y,sx,sy,n.tone,.16,Math.max(.75,minSide*.0027));
+    for(let k=0;k<2;k++){
+      const u=(t*(.18+i*.012)+k*.5+i*.09)%1;
+      const px=n.x+(sx-n.x)*u;
+      const py=n.y+(sy-n.y)*u;
+      eDot(ctx,px,py,Math.max(1.6,minSide*.0055),n.tone,Math.max(10,minSide*.035));
+    }
+    const pulse=(Math.sin(t*1.8+i*1.4)+1)/2;
+    eDot(ctx,n.x,n.y,Math.max(2.1,nodeW*.065+nodeW*.025*pulse),n.tone,Math.max(13,minSide*.045));
+  });
+
+  // Central cloud control plane.
+  ctx.save();
+  ctx.shadowBlur=Math.max(28,minSide*.10);
+  ctx.shadowColor='rgba(215,255,116,.17)';
+  ctx.fillStyle='rgba(12,18,16,.96)';
+  ctx.strokeStyle='rgba(224,255,178,.36)';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.roundRect(cx-coreW/2,cy-coreH/2,coreW,coreH,Math.max(16,coreW*.11));
+  ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Inner glass layer.
+  ctx.strokeStyle='rgba(107,231,255,.14)';
+  ctx.beginPath();
+  ctx.roundRect(cx-coreW*.42,cy-coreH*.34,coreW*.84,coreH*.68,Math.max(10,coreW*.07));
+  ctx.stroke();
+
+  // Aimesig logo watermark: use the exact same logo asset as the header,
+  // softly placed inside the cloud control plane so the cloud identity and
+  // Aimesig branding are both visible without competing with the foreground.
+  if(aimeSigLogo.complete && aimeSigLogo.naturalWidth){
+    const ratio=aimeSigLogo.naturalWidth/aimeSigLogo.naturalHeight||1;
+    const logoH=Math.min(coreH*.70,coreW*.48);
+    const logoW=logoH*ratio;
+    const maxW=coreW*.62;
+    const scale=Math.min(1,maxW/logoW);
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(cx-coreW/2,cy-coreH/2,coreW,coreH,Math.max(16,coreW*.11));
+    ctx.clip();
+    ctx.globalAlpha=mobile?.085:.115;
+    ctx.globalCompositeOperation='screen';
+    ctx.shadowBlur=Math.max(16,minSide*.07);
+    ctx.shadowColor='rgba(215,255,116,.14)';
+    ctx.drawImage(aimeSigLogo,cx-(logoW*scale)/2,cy-(logoH*scale)/2+coreH*.06,logoW*scale,logoH*scale);
+    ctx.restore();
+  }
+
+  // Cloud glyph.
+  const cloudScale=Math.min(coreW,coreH*1.9);
+  const gy=cy-coreH*.06;
+  ctx.fillStyle='rgba(215,255,116,.13)';
+  ctx.strokeStyle='rgba(215,255,116,.56)';
+  ctx.lineWidth=Math.max(1,minSide*.003);
+  ctx.beginPath();
+  ctx.arc(cx-cloudScale*.10,gy,cloudScale*.085,Math.PI*.18,Math.PI*1.92);
+  ctx.arc(cx+cloudScale*.02,gy-cloudScale*.045,cloudScale*.11,Math.PI,Math.PI*2);
+  ctx.arc(cx+cloudScale*.13,gy,cloudScale*.075,Math.PI*1.08,Math.PI*.08);
+  ctx.lineTo(cx+cloudScale*.18,gy+cloudScale*.075);
+  ctx.lineTo(cx-cloudScale*.17,gy+cloudScale*.075);
+  ctx.closePath();ctx.fill();ctx.stroke();
+
+  // Three small platform indicators.
+  for(let i=0;i<3;i++){
+    const lx=cx-coreW*.24+i*coreW*.24;
+    const active=((Math.floor(t*1.4)+i)%3)!==1;
+    eDot(ctx,lx,cy+coreH*.27,Math.max(2,minSide*.006),active?(i===1?lime:cyan):'rgba(255,255,255,.17)',active?12:5);
+  }
+  ctx.restore();
+
+  eText(ctx,'AIMESIG CLOUD',cx,cy-coreH*.02,white,fontTitle,'center');
+  eText(ctx,'CONTROL PLANE',cx,cy+coreH*.15,'rgba(215,255,116,.72)',fontLabel,'center');
+  eText(ctx,'SECURE · SCALABLE · OBSERVABLE',cx,cy+coreH*.31,'rgba(230,236,242,.38)',Math.max(6.5,fontLabel*.78),'center');
+
+  // Domain cards / labels stay clear of the central panel.
+  nodes.forEach((n,i)=>{
+    ctx.save();
+    ctx.translate(n.x,n.y);
+    ctx.fillStyle='rgba(10,15,21,.90)';
+    ctx.strokeStyle=i===1?'rgba(215,255,116,.42)':i===2?'rgba(168,145,255,.42)':'rgba(107,231,255,.40)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(-nodeW/2,-nodeH/2,nodeW,nodeH,Math.max(7,nodeW*.18));ctx.fill();ctx.stroke();
+    ctx.fillStyle=n.tone;
+    ctx.fillRect(-nodeW*.22,-nodeH*.08,nodeW*.44,Math.max(1.5,nodeH*.06));
+    ctx.restore();
+    const labelY=n.y + (n.y<cy?-1:1)*(nodeH*.78);
+    eText(ctx,n.label,n.x,labelY,n.tone,fontLabel,'center');
+  });
+
+  // Continuous traffic pulses around the cloud perimeter.
+  nodes.forEach((n,i)=>{
+    const u=(t*.24+i*.16)%1;
+    const px=n.x+(cx-n.x)*u;
+    const py=n.y+(cy-n.y)*u;
+    eDot(ctx,px,py,Math.max(1.5,minSide*.0048),i%2?lime:cyan,Math.max(10,minSide*.032));
+  });
+
+  // Small status/readout line at the bottom, kept legible on phones.
+  eText(ctx,'API ROUTING',cx-orbitX*.68,h*.90,'rgba(107,231,255,.38)',Math.max(6.5,fontLabel*.76),'center');
+  eText(ctx,'OBSERVABILITY',cx+orbitX*.68,h*.90,'rgba(215,255,116,.38)',Math.max(6.5,fontLabel*.76),'center');
+}
 function renderEcosystems(now){
   const t=now*.001;
   ecoCanvases.forEach(canvas=>{
     const{ctx,w,h}=fitEcoCanvas(canvas);
     ctx.clearRect(0,0,w,h);
+    // Keep the focal artwork visually substantial on narrow phones without clipping it on desktop.
+    const s=Math.max(.96,Math.min(1.10,Math.max(w,h)/420));
+    ctx.save();
+    ctx.translate(w/2,h/2);ctx.scale(s,s);ctx.translate(-w/2,-h/2);
     const art=canvas.dataset.ecoArt;
     if(art==='iot')drawEcoIoT(ctx,w,h,t);
     else if(art==='cloud')drawEcoCloud(ctx,w,h,t);
     else drawEcoAI(ctx,w,h,t);
     // vignette
+    ctx.restore();
     const vig=ctx.createRadialGradient(w/2,h/2,h*.25,w/2,h/2,h*.75);
     vig.addColorStop(0,'transparent');vig.addColorStop(1,'rgba(6,6,9,.32)');
     ctx.fillStyle=vig;ctx.fillRect(0,0,w,h);
